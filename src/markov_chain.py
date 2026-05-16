@@ -63,10 +63,12 @@ def _get_path_edges(dtmc: Graph, path: tuple[Vertex]) -> tuple[Edge]:
 
     return tuple(edges)
 
-def trace_n_step_transition_probability(dtmc: Graph, i: Vertex, j: Vertex, n: int) -> float:
+def get_n_step_transition_paths(dtmc: Graph, i: Vertex, j: Vertex, n: int) -> frozenset[tuple[Vertex]]:
     all_transition_paths = trace_n_step_futures(dtmc, i, n)
+    return frozenset({p for p in all_transition_paths if p[-1] == j})
 
-    transition_paths = {p for p in all_transition_paths if p[-1] == j}
+def trace_n_step_transition_probability(dtmc: Graph, i: Vertex, j: Vertex, n: int) -> float:
+    transition_paths = get_n_step_transition_paths(dtmc, i, j, n)
     transition_paths_edges: set[tuple[Edge]] = {_get_path_edges(dtmc, p) for p in transition_paths}
     path_weights = {prod((e.weight for e in p)) for p in transition_paths_edges}
 
@@ -83,7 +85,7 @@ def trace_period(dtmc: Graph, i: Vertex) -> int:
     
     return gcd(*J_i)
 
-def classify_states(dtmc: Graph) -> set[frozenset[Vertex]]:
+def classify_states(dtmc: Graph) -> frozenset[frozenset[Vertex]]:
     states = dtmc.V
     classes: set[frozenset[Vertex]] = set()
 
@@ -107,4 +109,4 @@ def classify_states(dtmc: Graph) -> set[frozenset[Vertex]]:
         
         classes.add(frozenset(classification))
     
-    return classes
+    return frozenset(classes)

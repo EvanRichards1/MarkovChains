@@ -32,7 +32,3 @@ dtmc3 = Graph(
         Edge(vc, va, 1)
     }
 )
-
-print(f"dtmc3 communication classes? {mc.classify_states(dtmc3)}")
-print(f"dtmc2 communication classes? {mc.classify_states(dtmc2)}")
-print(f"dtmc1 communication classes? {mc.classify_states(dtmc1)}")
