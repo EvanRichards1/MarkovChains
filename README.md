@@ -9,6 +9,7 @@ A Markov Chain model written in Python.
 - [x] Deductive n-step transition probability tracing.
 - [x] Deductive period tracer.
 - [x] Deductive state communication class classifier.
+- [ ] Add tests for past and future features.
 - [ ] Deductive hitting probability/time tracer.
 - [ ] Recurrence/transience classifier.
 - [ ] Positive/null recurrent classifier.
