@@ -79,3 +79,29 @@ def trace_period(dtmc: Graph, i: Vertex) -> int:
         if trace_n_step_transition_probability(dtmc, i, i, j) > 0: J_i.add(j)
     
     return gcd(*J_i)
+
+def classify_states(dtmc: Graph) -> set[frozenset[Vertex]]:
+    states = dtmc.V
+    classes: set[frozenset[Vertex]] = set()
+
+    def communicates(i: Vertex) -> bool:
+        paths = trace_n_step_transitions(dtmc, i, len(dtmc.V))
+
+        communication: set[Vertex] = set()
+
+        for p in paths:
+            for v in p:
+                communication.add(v)
+        
+        return communication
+
+    # construct maximally covering sets
+    for state in states:
+        classification: set[Vertex] = {state}
+
+        for v in communicates(state):
+            if state in communicates(v): classification.add(v)
+        
+        classes.add(frozenset(classification))
+    
+    return classes
