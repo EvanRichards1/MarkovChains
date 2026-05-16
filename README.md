@@ -10,7 +10,8 @@ A Markov Chain model written in Python.
 - [x] Deductive period tracer.
 - [x] Deductive state communication class classifier.
 - [x] Is irreducible identifier.
-- [ ] Add tests for past and future features.
+- [x] Add tests for past features
+- [ ] Add tests for upcoming features.
 - [ ] Deductive hitting probability/time tracer.
 - [ ] Recurrence/transience classifier.
 - [ ] Positive/null recurrent classifier.
