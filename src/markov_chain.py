@@ -11,27 +11,30 @@ def get_transitions(dtmc: Graph, state: Vertex):
     return transitions
 
 # simulate the dtmc
-def run_dtmc(dtmc: Graph, start_state: Vertex, steps: int) -> list[Vertex]:
+# returns X_0, ..., X_n
+def run_dtmc(dtmc: Graph, start_state: Vertex, n: int) -> tuple[Vertex]:
     state: Vertex = start_state
     state_history: list[Vertex] = [state]
 
-    for i in range(0, steps):
+    for _ in range(0, n):
         transitions: list[Edge] = list(get_transitions(dtmc, state))
         if transitions != []:
             transition: Edge = choices(transitions, [t.weight for t in transitions], k=1)[0]
             state = transition.v2
         state_history.append(state)
-    
-    return state_history
+
+    return tuple(state_history)
 
 # we want to find every possible path of size n-steps from i
-def trace_n_step_transitions(dtmc: Graph, i: Vertex, n: int, history: tuple[Vertex] = ()) -> set[tuple[Vertex]]:
-    state: Vertex = i
+# returns the set of ALL valid futures {(X_0, ..., X_n), ...}
+def trace_n_step_futures(dtmc: Graph, i: Vertex, n: int, history: tuple[Vertex] = ()) -> set[tuple[Vertex]]:
     paths: set[tuple[Vertex]] = set()
 
     history = history + (i,)
 
     # base case
+    if n == 0:
+        paths.add(history)
     if n == 1:
         transitions = get_transitions(dtmc, i)
         for t in transitions:
@@ -41,7 +44,7 @@ def trace_n_step_transitions(dtmc: Graph, i: Vertex, n: int, history: tuple[Vert
     elif n > 1:
         transitions = get_transitions(dtmc, i)
         for t in transitions:
-            paths.update(trace_n_step_transitions(dtmc, t.v2, n-1, history))
+            paths.update(trace_n_step_futures(dtmc, t.v2, n-1, history))
 
     return paths
 
@@ -61,7 +64,7 @@ def _get_path_edges(dtmc: Graph, path: tuple[Vertex]) -> tuple[Edge]:
     return tuple(edges)
 
 def trace_n_step_transition_probability(dtmc: Graph, i: Vertex, j: Vertex, n: int) -> float:
-    all_transition_paths = trace_n_step_transitions(dtmc, i, n)
+    all_transition_paths = trace_n_step_futures(dtmc, i, n)
 
     transition_paths = {p for p in all_transition_paths if p[-1] == j}
     transition_paths_edges: set[tuple[Edge]] = {_get_path_edges(dtmc, p) for p in transition_paths}
@@ -85,7 +88,7 @@ def classify_states(dtmc: Graph) -> set[frozenset[Vertex]]:
     classes: set[frozenset[Vertex]] = set()
 
     def communicates(i: Vertex) -> bool:
-        paths = trace_n_step_transitions(dtmc, i, len(dtmc.V))
+        paths = trace_n_step_futures(dtmc, i, len(dtmc.V))
 
         communication: set[Vertex] = set()
 
