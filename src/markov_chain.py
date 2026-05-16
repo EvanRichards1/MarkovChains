@@ -113,3 +113,30 @@ def classify_states(dtmc: Graph) -> frozenset[frozenset[Vertex]]:
 
 def is_irreducible(dtmc: Graph) -> bool:
     return classify_states(dtmc) == frozenset({dtmc.V})
+
+def hitting_probability(dtmc: Graph, i: Vertex, A: frozenset[Vertex]) -> float:
+    pass
+
+def expected_hitting_time(dtmc: Graph, i: Vertex, A: frozenset[Vertex]) -> float:
+    pass
+
+def is_transient(dtmc: Graph, i: Vertex) -> bool:
+    pass
+
+def is_recurrent(dtmc: Graph, i: Vertex) -> bool:
+    return not is_transient(dtmc, i)
+
+def is_positive_recurrent(dtmc: Graph, i: Vertex) -> bool:
+    pass
+
+def is_null_recurrent(dtmc: Graph, i: Vertex) -> bool:
+    return not is_positive_recurrent(dtmc, i)
+
+def exists_stationary_distribution(dtmc: Graph) -> bool:
+    pass
+
+def find_stationary_distribution(dtmc: Graph) -> tuple[float]:
+    pass
+
+def is_reversible(dtmc: Graph) -> bool:
+    pass

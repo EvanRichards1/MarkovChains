@@ -114,3 +114,17 @@ assert mc.is_irreducible(dtmc2) == True
 assert mc.is_irreducible(dtmc3) == False
 assert mc.is_irreducible(dtmc4) == True
 assert mc.is_irreducible(dtmc5) == False
+
+# TEST: hitting_probability
+
+# TEST: expected_hitting_time
+
+# TEST: is_transient
+
+# TEST: is positive_recurrent
+
+# TEST: exists_stationary_distribution
+
+# TEST: find_stationary_distribution
+
+# TEST: is_reversible
