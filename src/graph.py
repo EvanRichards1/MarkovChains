@@ -15,9 +15,9 @@ class Edge:
         return f"{self.v1} ->{self.weight} {self.v2}"
 
 class Graph:
-    def __init__(self, V: set[Vertex], E: set[Edge]):
-        self.V = V
-        self.E = E
+    def __init__(self, V: frozenset[Vertex], E: frozenset[Edge]):
+        self.V = frozenset(V)
+        self.E = frozenset(E)
     
     def __repr__(self):
         return f"Graph:\n\tVertices: {self.V}\n\tEdges: {self.E}"

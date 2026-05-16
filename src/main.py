@@ -32,3 +32,12 @@ dtmc3 = Graph(
         Edge(vc, va, 1)
     }
 )
+
+dtmc4 = Graph(
+    {va},
+    {
+        Edge(va, va, 1)
+    }
+)
+
+print(mc.run_dtmc(dtmc4, va, 18))

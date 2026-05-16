@@ -46,6 +46,14 @@ dtmc4: Graph = Graph(
     }
 )
 
+dtmc5: Graph = Graph(
+    {v1, v2, v3},
+    {
+        Edge(v1, v2, 1),
+        Edge(v1, v3, 1)
+    }
+)
+
 
 # TEST: trace_n_step_futures
 assert mc.trace_n_step_futures(dtmc1, v1, 0) == {(v1,)}
@@ -97,4 +105,12 @@ assert mc.trace_period(dtmc4, v2) == 2
 assert mc.classify_states(dtmc1) == frozenset({frozenset({v1, v2, v3})})
 assert mc.classify_states(dtmc2) == frozenset({frozenset({v1, v2, v3})})
 assert mc.classify_states(dtmc3) == frozenset({frozenset({v1, v2, v3}), frozenset({v4})})
-assert mc.classify_states(dtmc1) == frozenset({frozenset({v1, v2})})
+assert mc.classify_states(dtmc4) == frozenset({frozenset({v1, v2})})
+assert mc.classify_states(dtmc5) == frozenset({frozenset({v1}), frozenset({v2}), frozenset({v3})})
+
+# TEST: irreducible
+assert mc.is_irreducible(dtmc1) == True
+assert mc.is_irreducible(dtmc2) == True
+assert mc.is_irreducible(dtmc3) == False
+assert mc.is_irreducible(dtmc4) == True
+assert mc.is_irreducible(dtmc5) == False

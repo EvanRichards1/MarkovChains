@@ -110,3 +110,6 @@ def classify_states(dtmc: Graph) -> frozenset[frozenset[Vertex]]:
         classes.add(frozenset(classification))
     
     return frozenset(classes)
+
+def is_irreducible(dtmc: Graph) -> bool:
+    return classify_states(dtmc) == frozenset({dtmc.V})
