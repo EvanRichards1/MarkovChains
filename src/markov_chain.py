@@ -66,6 +66,7 @@ def trace_period(dtmc: Graph, i: Vertex) -> int:
     
     return gcd(*J_i)
 
+# period 1
 def is_aperiodic(dtmc: Graph, i: Vertex) -> bool:
     return trace_period(dtmc, i) == 1
 
@@ -79,6 +80,7 @@ def classify_states(dtmc: Graph) -> frozenset[frozenset[Vertex]]:
         for i in dtmc.V
     )
 
+# i.e. 1 communicating class C=S
 def is_irreducible(dtmc: Graph) -> bool:
     return classify_states(dtmc) == frozenset({dtmc.V})
 
