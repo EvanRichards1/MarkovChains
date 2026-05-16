@@ -2,26 +2,22 @@ from graph import *
 from random import choices
 from math import gcd, prod
 
-def get_transitions(dtmc: Graph, state: Vertex):
-    transitions: set[Edge] = set()
-
-    for e in dtmc.E:
-        if e.v1 == state: transitions.add(e)
-    
-    return transitions
+# returns set of edges (i,j, w)
+def get_transitions(dtmc: Graph, i: Vertex) -> frozenset[Edge]:
+    return frozenset({e for e in dtmc.E if e.v1 == i})
 
 # simulate the dtmc
 # returns X_0, ..., X_n
-def run_dtmc(dtmc: Graph, start_state: Vertex, n: int) -> tuple[Vertex]:
-    state: Vertex = start_state
-    state_history: list[Vertex] = [state]
+def run_dtmc(dtmc: Graph, i_0: Vertex, n: int) -> tuple[Vertex]:
+    i = i_0
+    state_history: list[Vertex] = [i]
 
-    for _ in range(0, n):
-        transitions: list[Edge] = list(get_transitions(dtmc, state))
+    for _ in range(n):
+        transitions: list[Edge] = list(get_transitions(dtmc, i))
         if transitions != []:
             transition: Edge = choices(transitions, [t.weight for t in transitions], k=1)[0]
-            state = transition.v2
-        state_history.append(state)
+            i = transition.v2
+        state_history.append(i)
 
     return tuple(state_history)
 
@@ -33,83 +29,55 @@ def trace_n_step_futures(dtmc: Graph, i: Vertex, n: int, history: tuple[Vertex] 
     history = history + (i,)
 
     # base case
-    if n == 0:
-        paths.add(history)
-    if n == 1:
-        transitions = get_transitions(dtmc, i)
-        for t in transitions:
-            path: tuple[Vertex] = history + (t.v2,)
-            paths.add(path)
+    if n == 0: paths.add(history)
     # general case
-    elif n > 1:
+    elif n > 0:
         transitions = get_transitions(dtmc, i)
         for t in transitions:
             paths.update(trace_n_step_futures(dtmc, t.v2, n-1, history))
 
     return paths
 
-# 1 to 1 map
+# 1 to 1 map from vertex pair to edge
 def _get_edge(dtmc: Graph, i: Vertex, j: Vertex) -> Edge:
-    transitions = get_transitions(dtmc, i)
-
-    for t in transitions:
+    for t in get_transitions(dtmc, i):
         if t.v2 == j: return t
 
+# maps vertex paths to a tuple of edges
 def _get_path_edges(dtmc: Graph, path: tuple[Vertex]) -> tuple[Edge]:
-    edges: list[Edge] = []
+    return (_get_edge(dtmc, path[i], path[i+1]) for i in range(len(path) - 1))
 
-    for i in range(0, len(path)-1):
-        edges.append(_get_edge(dtmc, path[i], path[i+1]))
-
-    return tuple(edges)
-
-def get_n_step_transition_paths(dtmc: Graph, i: Vertex, j: Vertex, n: int) -> frozenset[tuple[Vertex]]:
-    all_transition_paths = trace_n_step_futures(dtmc, i, n)
-    return frozenset({p for p in all_transition_paths if p[-1] == j})
-
+# p^(n)_i,j
 def trace_n_step_transition_probability(dtmc: Graph, i: Vertex, j: Vertex, n: int) -> float:
-    transition_paths = get_n_step_transition_paths(dtmc, i, j, n)
-    transition_paths_edges: set[tuple[Edge]] = {_get_path_edges(dtmc, p) for p in transition_paths}
-    path_weights = {prod((e.weight for e in p)) for p in transition_paths_edges}
+    return sum(
+        # product of edge weights in {path edges}
+        (prod((e.weight for e in p)) for p in
+        # {path edges} in a vertex path
+        {_get_path_edges(dtmc, p) for p in
+        # subset of {vertex paths} in n steps that end in j
+        {p for p in trace_n_step_futures(dtmc, i, n) if p[-1] == j}})
+    )
 
-    return sum(path_weights)
-
+# gcd(J_i) i.e. period
 def trace_period(dtmc: Graph, i: Vertex) -> int:
     # known lower bound
     time = 3 * len(dtmc.V)
-
-    J_i: set[int] = set()
-
-    for j in range(1, time):
-        if trace_n_step_transition_probability(dtmc, i, i, j) > 0: J_i.add(j)
+    J_i = frozenset({n for n in range(1, time) if trace_n_step_transition_probability(dtmc, i, i, n) > 0})
     
     return gcd(*J_i)
 
+def is_aperiodic(dtmc: Graph, i: Vertex) -> bool:
+    return trace_period(dtmc, i) == 1
+
+# maps our dtmc to a set of communicating classes
 def classify_states(dtmc: Graph) -> frozenset[frozenset[Vertex]]:
-    states = dtmc.V
-    classes: set[frozenset[Vertex]] = set()
+    def communicates(i: Vertex) -> frozenset[Vertex]:
+        return frozenset({v for p in trace_n_step_futures(dtmc, i, len(dtmc.V)) for v in p})
 
-    def communicates(i: Vertex) -> bool:
-        paths = trace_n_step_futures(dtmc, i, len(dtmc.V))
-
-        communication: set[Vertex] = set()
-
-        for p in paths:
-            for v in p:
-                communication.add(v)
-        
-        return communication
-
-    # construct maximally covering sets
-    for state in states:
-        classification: set[Vertex] = {state}
-
-        for v in communicates(state):
-            if state in communicates(v): classification.add(v)
-        
-        classes.add(frozenset(classification))
-    
-    return frozenset(classes)
+    return frozenset(
+        frozenset({j for j in communicates(i) if i in communicates(j)})
+        for i in dtmc.V
+    )
 
 def is_irreducible(dtmc: Graph) -> bool:
     return classify_states(dtmc) == frozenset({dtmc.V})

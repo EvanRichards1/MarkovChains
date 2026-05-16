@@ -1,8 +1,15 @@
 # Markov Chains
 
-A Markov Chain model written in Python.
+A general Markov Chain library written in Python using my minimal weighted digraph representations and pythonic comprehensions.
 
-## Progression
+## Imports
+
+- math: gcd, prod
+- random: choices
+
+## Usage Examples
+
+## Progress
 
 - [x] Weighted digraph representation.
 - [x] DTMC sampler.
@@ -10,6 +17,7 @@ A Markov Chain model written in Python.
 - [x] Deductive period tracer.
 - [x] Deductive state communication class classifier.
 - [x] Is irreducible identifier.
+- [x] Is aperiodic identifier.
 - [x] Add tests for past features
 - [ ] Add tests for upcoming features.
 - [ ] Deductive hitting probability/time tracer.

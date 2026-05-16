@@ -50,7 +50,9 @@ dtmc5: Graph = Graph(
     {v1, v2, v3},
     {
         Edge(v1, v2, 1),
-        Edge(v1, v3, 1)
+        Edge(v1, v3, 1),
+        Edge(v2, v2, 1),
+        Edge(v3, v3, 1)
     }
 )
 
@@ -114,6 +116,13 @@ assert mc.is_irreducible(dtmc2) == True
 assert mc.is_irreducible(dtmc3) == False
 assert mc.is_irreducible(dtmc4) == True
 assert mc.is_irreducible(dtmc5) == False
+
+# TEST: aperiodic
+assert mc.is_aperiodic(dtmc1, v1) == False
+assert mc.is_aperiodic(dtmc2, v1) == True
+assert mc.is_aperiodic(dtmc3, v1) == False
+assert mc.is_aperiodic(dtmc3, v4) == True
+assert mc.is_aperiodic(dtmc4, v1) == False
 
 # TEST: hitting_probability
 
