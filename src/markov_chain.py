@@ -111,17 +111,16 @@ def find_stationary_distribution(dtmc: Graph) -> tuple[float]:
 def is_reversible(dtmc: Graph) -> bool:
     pass
 
-def summarise_chain(dtmc: Graph) -> str:
+def summarise(dtmc: Graph) -> str:
     communicating_classes = classify_states(dtmc)
 
-    return f"""
-        Sample run: {run_dtmc(dtmc, next(iter(dtmc.V)), 15)}
-        Communicating classes: {communicating_classes}
-        {"Irreducible" if is_irreducible(dtmc) else "Reducible"}
-        Periodicities:
-        {'\n'.join((f"\t- {c}: {trace_period(dtmc, next(iter(c)))}" for c in communicating_classes))}
-    """
-    
+    return (
+f"""Sample run: {run_dtmc(dtmc, next(iter(dtmc.V)), 15)}
+Communicating classes: {communicating_classes}
+{"Irreducible" if is_irreducible(dtmc) else "Reducible"}
+Periodicities:
+{'\n'.join((f"- {c}: {trace_period(dtmc, next(iter(c)))}" for c in communicating_classes))}"""
+    )
     # return f"""
     #     Sample run: {run_dtmc(dtmc, next(iter(dtmc.V)), 15)}
     #     Communicating classes: {communicating_classes}
