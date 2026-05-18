@@ -1,11 +1,12 @@
 # Markov Chains
 
-A general Markov Chain library written in Python using my minimal weighted digraph representations and pythonic comprehensions.
+A general Markov Chain library written in Python using a minimal weighted digraph representations and pythonic comprehensions.
 
 ## Imports
 
 - math: gcd, prod
 - random: choices
+- (for visualise.py only) graphiz: Digraph
 
 ## Usage Examples
 
@@ -13,14 +14,14 @@ A general Markov Chain library written in Python using my minimal weighted digra
 
 - [x] Weighted digraph representation.
 - [x] DTMC sampler.
-- [x] Deductive n-step transition probability tracing.
-- [x] Deductive period tracer.
-- [x] Deductive state communication class classifier.
+- [x] n-step transition probability tracing.
+- [x] Period tracer.
+- [x] State communicating class classifier.
 - [x] Is irreducible identifier.
 - [x] Is aperiodic identifier.
-- [x] Add tests for past features
-- [x] Add DTMC summariser.
-- [x] Add quick DTMC visualiser using graphiz.Digraph
+- [x] Tests for past features.
+- [x] DTMC summariser.
+- [x] Quick DTMC visualiser using graphviz.Digraph.
 - [ ] Add tests for upcoming features.
 - [ ] Deductive hitting probability/time tracer.
 - [ ] Recurrence/transience classifier.
