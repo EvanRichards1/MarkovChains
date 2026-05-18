@@ -1,3 +1,11 @@
+# remove the ugly frozenset prepend for repr
+class ISet(frozenset):
+    def __repr__(self):
+        return str(set(self))
+    
+    def __str__(self):
+        return str(set(self))
+
 class Vertex:
     def __init__(self, label: str):
         self.label = label
@@ -15,9 +23,10 @@ class Edge:
         return f"{self.v1} ->{self.weight} {self.v2}"
 
 class Graph:
-    def __init__(self, V: frozenset[Vertex], E: frozenset[Edge]):
+    def __init__(self, V: ISet[Vertex], E: ISet[Edge], label: str = None):
         self.V = frozenset(V)
         self.E = frozenset(E)
+        self.label = label
     
     def __repr__(self):
         return f"Graph:\n\tVertices: {self.V}\n\tEdges: {self.E}"

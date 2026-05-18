@@ -19,6 +19,8 @@ A general Markov Chain library written in Python using my minimal weighted digra
 - [x] Is irreducible identifier.
 - [x] Is aperiodic identifier.
 - [x] Add tests for past features
+- [x] Add DTMC summariser.
+- [x] Add quick DTMC visualiser using graphiz.Digraph
 - [ ] Add tests for upcoming features.
 - [ ] Deductive hitting probability/time tracer.
 - [ ] Recurrence/transience classifier.

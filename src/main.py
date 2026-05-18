@@ -1,43 +1,62 @@
 from graph import *
 import markov_chain as mc
+from visualise import visualise
 
-va: Vertex = Vertex('a')
-vb: Vertex = Vertex('b')
-vc: Vertex = Vertex('c')
+v1: Vertex = Vertex('1')
+v2: Vertex = Vertex('2')
+v3: Vertex = Vertex('3')
+v4: Vertex = Vertex('4')
 
-dtmc1 = Graph(
-    {va, vb, vc},
+dtmc1: Graph = Graph(
+    {v1, v2, v3},
     {
-        Edge(va, vb, 1),
-        Edge(vb, vb, 2/3),
-        Edge(vb, vc, 1/3),
-        Edge(vc, vb, 1/2),
-        Edge(vc, va, 1/2)
-    }
+        Edge(v1, v2, 1),
+        Edge(v2, v3, 1),
+        Edge(v3, v1, 1)
+    },
+    "dtmc1"
 )
 
 dtmc2 = Graph(
-    {va, vb, vc},
+    {v1, v2, v3},
     {
-        Edge(va, vb, 1/2),
-        Edge(va, vc, 1/2)
-    }
+        Edge(v1, v2, 1),
+        Edge(v2, v2, 2/3),
+        Edge(v2, v3, 1/3),
+        Edge(v3, v2, 1/2),
+        Edge(v3, v1, 1/2)
+    },
+    "dtmc2"
 )
 
-dtmc3 = Graph(
-    {va, vb, vc},
+dtmc3: Graph = Graph(
+    {v1, v2, v3, v4},
     {
-        Edge(va, vb, 1),
-        Edge(vb, vc, 1),
-        Edge(vc, va, 1)
-    }
+        Edge(v1, v2, 1),
+        Edge(v2, v3, 1),
+        Edge(v3, v1, 0.75),
+        Edge(v3, v4, 0.25),
+        Edge(v4, v4, 1)
+    },
+    "dtmc3"
 )
 
-dtmc4 = Graph(
-    {va},
+dtmc4: Graph = Graph(
+    {v1, v2},
     {
-        Edge(va, va, 1)
-    }
+        Edge(v1, v2, 1),
+        Edge(v2, v1, 1)
+    },
+    "dtmc4"
 )
 
-print(mc.run_dtmc(dtmc4, va, 18))
+dtmc5: Graph = Graph(
+    {v1, v2, v3},
+    {
+        Edge(v1, v2, 1),
+        Edge(v1, v3, 1),
+        Edge(v2, v2, 1),
+        Edge(v3, v3, 1)
+    },
+    "dtmc5"
+)
