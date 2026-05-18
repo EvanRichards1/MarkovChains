@@ -10,12 +10,12 @@ A general Markov Chain library written in Python using a minimal weighted digrap
 
 ## Setup
 
-- Setup python environment.
+Setup python environment.
 `python -m venv .venv`
-- - Shell: `source .venv/bin/activate`
-- - Powershell: `.\.venv\bin\activate.ps1`
+- Shell: `source .venv/bin/activate`
+- Powershell: `.\.venv\bin\activate.ps1`
 
-- Install packages
+Install packages
 `pip install -r requirements.txt`
 
 ## Usage Examples
@@ -34,6 +34,10 @@ dtmc1: Graph = Graph(
 )
 ```
 
+`visualise(dtmc1, view=True)`
+
+<img width="1083" height="338" alt="image" src="https://github.com/user-attachments/assets/43ec92a5-c142-435b-ad87-e5f268cf9d32" />
+
 ```python
 dtmc2: Graph = Graph(
     {v1, v2, v3, v4},
@@ -48,6 +52,10 @@ dtmc2: Graph = Graph(
 )
 ```
 
+`visualise(dtmc2, view=True)`
+
+<img width="1590" height="338" alt="image" src="https://github.com/user-attachments/assets/bc1d74a1-bca6-4680-bff8-c4cc2233f6a7" />
+
 ```python
 dtmc3: Graph = Graph(
     {v1, v2},
@@ -58,6 +66,10 @@ dtmc3: Graph = Graph(
     "dtmc3"
 )
 ```
+
+`visualise(dtmc3, view=True)`
+
+<img width="671" height="203" alt="image" src="https://github.com/user-attachments/assets/779354c3-e96a-4051-a4f0-82f155f3fd7d" />
 
 ## Progress
 
