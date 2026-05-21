@@ -84,16 +84,19 @@ def classify_states(dtmc: Graph) -> ISet[Iset[Vertex]]:
 def is_irreducible(dtmc: Graph) -> bool:
     return classify_states(dtmc) == ISet({dtmc.V})
 
+def is_closed(dtmc: Graph, C: ISet[Vertex]) -> bool:
+    return {e for e in dtmc.E if e.v1 in C and e.v2 not in C} == set()
+
 def hitting_probability(dtmc: Graph, i: Vertex, A: ISet[Vertex]) -> float:
     pass
 
 def expected_hitting_time(dtmc: Graph, i: Vertex, A: ISet[Vertex]) -> float:
     pass
 
-def is_transient(dtmc: Graph, i: Vertex) -> bool:
-    pass
+def is_transient(dtmc: Graph, C: ISet[Vertex]) -> bool:
+    return not is_closed(dtmc, C)
 
-def is_recurrent(dtmc: Graph, i: Vertex) -> bool:
+def is_recurrent(dtmc: Graph, C: ISet[Vertex]) -> bool:
     return not is_transient(dtmc, i)
 
 def is_positive_recurrent(dtmc: Graph, i: Vertex) -> bool:

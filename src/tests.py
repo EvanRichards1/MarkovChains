@@ -49,8 +49,8 @@ dtmc4: Graph = Graph(
 dtmc5: Graph = Graph(
     {v1, v2, v3},
     {
-        Edge(v1, v2, 1),
-        Edge(v1, v3, 1),
+        Edge(v1, v2, 0.5),
+        Edge(v1, v3, 0.5),
         Edge(v2, v2, 1),
         Edge(v3, v3, 1)
     }
@@ -124,13 +124,23 @@ assert mc.is_aperiodic(dtmc3, v1) == False
 assert mc.is_aperiodic(dtmc3, v4) == True
 assert mc.is_aperiodic(dtmc4, v1) == False
 
-# TEST: hitting_probability
-
-# TEST: expected_hitting_time
+# TEST: is_closed
+assert mc.is_closed(dtmc1, ISet({v1, v2, v3})) == True
+assert mc.is_closed(dtmc5, ISet({v1})) == False
 
 # TEST: is_transient
+assert mc.is_transient(dtmc1, ISet({v1, v2, v3})) == False
 
-# TEST: is positive_recurrent
+# TEST: hitting_probability
+assert mc.hitting_probability(dtmc1, v1, ISet({v2, v3})) == 1
+assert mc.hitting_probability(dtmc1, v1, ISet({v3})) == 1
+assert mc.hitting_probability(dtmc2, v3, ISet({v4})) == 1
+assert mc.hitting_probability(dtmc5, v1, ISet({v2,v3})) == 1
+assert mc.hitting_probability(dtmc5, v1, ISet({v2})) == 0.5
+
+# TEST: expected_hitting_time
+assert mc.expected_hitting_time(dtmc1, v1, ISet({v3})) == 2
+assert mc.expected_hitting_time(dtmc2, v1, ISet({v4})) == 3
 
 # TEST: exists_stationary_distribution
 

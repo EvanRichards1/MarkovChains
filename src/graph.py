@@ -24,8 +24,8 @@ class Edge:
 
 class Graph:
     def __init__(self, V: ISet[Vertex], E: ISet[Edge], label: str = None):
-        self.V = frozenset(V)
-        self.E = frozenset(E)
+        self.V = ISet(V)
+        self.E = ISet(E)
         self.label = label
     
     def __repr__(self):
