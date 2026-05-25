@@ -1,8 +1,8 @@
 from graphviz import Digraph
-from graph import *
+from graph import DTMC
 
 # This is just a quick peripheral procedure to visualise my diraphs 
-def visualise(g: Graph, f: str = None, e: str = "png", view: bool = False) -> None:
+def visualise(g: DTMC, f: str = None, e: str = "png", view: bool = False) -> None:
     if not f:
         f = g.label
     
