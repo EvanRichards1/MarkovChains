@@ -34,7 +34,7 @@ v4: Vertex = Vertex('4')
 ### DTMC 1
 
 ```python
-dtmc1: Graph = Graph(
+dtmc1: mc.DTMC = mc.DTMC(
     {v1, v2, v3},
     {
         Edge(v1, v2, 1),
@@ -49,14 +49,14 @@ dtmc1: Graph = Graph(
 
 <img width="1083" height="338" alt="image" src="https://github.com/user-attachments/assets/43ec92a5-c142-435b-ad87-e5f268cf9d32" />
 
-`> mc.run_dtmc(dtmc1, v1, 12)`
+`> dtmc1.run(v1, 12)`
 
 `((1), (2), (3), (1), (2), (3), (1), (2), (3), (1), (2), (3), (1))`
 
 ### DTMC 2
 
 ```python
-dtmc2: Graph = Graph(
+dtmc2: mc.DTMC = mc.DTMC(
     {v1, v2, v3, v4},
     {
         Edge(v1, v2, 1),
@@ -73,7 +73,7 @@ dtmc2: Graph = Graph(
 
 <img width="1590" height="338" alt="image" src="https://github.com/user-attachments/assets/bc1d74a1-bca6-4680-bff8-c4cc2233f6a7" />
 
-`> mc.summarise(dtmc2)`
+`> dtmc2.summarise()`
 
 ```
 Sample run: ((1), (2), (3), (1), (2), (3), (1), (2), (3), (1), (2), (3), (1), (2), (3), (1))
@@ -87,7 +87,7 @@ Periodicities:
 ## DTMC 3
 
 ```python
-dtmc3: Graph = Graph(
+dtmc3: mc.DTMC = mc.DTMC(
     {v1, v2},
     {
         Edge(v1, v2, 1),
@@ -101,11 +101,11 @@ dtmc3: Graph = Graph(
 
 <img width="671" height="203" alt="image" src="https://github.com/user-attachments/assets/779354c3-e96a-4051-a4f0-82f155f3fd7d" />
 
-`> "p_v1,v2^(15) = " + str(mc.trace_n_step_transition_probability(dtmc3, v1, v2, 15))`
+`> "p_v1,v2^(15) = " + str(dtmc3.trace_n_step_transition_probability(v1, v2, 15))`
 
 `p_v1,v2^(15) = 1`
 
-`> "p_v1,v2^(14) = " + str(mc.trace_n_step_transition_probability(dtmc3, v1, v2, 14))`
+`> "p_v1,v2^(14) = " + str(dtmc3.trace_n_step_transition_probability(v1, v2, 14))`
 
 `p_v1,v2^(14) = 0`
 
