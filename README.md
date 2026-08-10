@@ -1,6 +1,6 @@
 # Markov Chains
 
-A general Markov Chain library written in Python using a minimal weighted digraph representations and pythonic comprehensions.
+A general Markov Chain library written in Python using minimal weighted digraph representations and pythonic comprehensions.
 
 ## Imports
 
