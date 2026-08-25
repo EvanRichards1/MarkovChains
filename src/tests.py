@@ -1,4 +1,4 @@
-from graph import *
+from graph import Vertex, Edge
 import markov_chain as mc
 from math import isclose
 
@@ -56,7 +56,6 @@ dtmc5: mc.DTMC = mc.DTMC(
     }
 )
 
-
 # TEST: trace_n_step_futures
 assert dtmc1.trace_n_step_futures(v1, 0) == {(v1,)}
 assert dtmc1.trace_n_step_futures(v1, 1) == {(v1, v2)}
@@ -104,11 +103,11 @@ assert dtmc4.trace_period(v1) == 2
 assert dtmc4.trace_period(v2) == 2
 
 # TEST: classify_states
-assert dtmc1.classify_states() == frozenset({frozenset({v1, v2, v3})})
-assert dtmc2.classify_states() == frozenset({frozenset({v1, v2, v3})})
-assert dtmc3.classify_states() == frozenset({frozenset({v1, v2, v3}), frozenset({v4})})
-assert dtmc4.classify_states() == frozenset({frozenset({v1, v2})})
-assert dtmc5.classify_states() == frozenset({frozenset({v1}), frozenset({v2}), frozenset({v3})})
+assert dtmc1.classify_states() == {frozenset({v1, v2, v3})}
+assert dtmc2.classify_states() == {frozenset({v1, v2, v3})}
+assert dtmc3.classify_states() == {frozenset({v1, v2, v3}), frozenset({v4})}
+assert dtmc4.classify_states() == {frozenset({v1, v2})}
+assert dtmc5.classify_states() == {frozenset({v1}), frozenset({v2}), frozenset({v3})}
 
 # TEST: irreducible
 assert dtmc1.is_irreducible() == True
@@ -125,22 +124,22 @@ assert dtmc3.is_aperiodic(v4) == True
 assert dtmc4.is_aperiodic(v1) == False
 
 # TEST: is_closed
-assert dtmc1.is_closed(ISet({v1, v2, v3})) == True
-assert dtmc5.is_closed(ISet({v1})) == False
+assert dtmc1.is_closed(frozenset({v1, v2, v3})) == True
+assert dtmc5.is_closed(frozenset({v1})) == False
 
 # TEST: is_transient
-assert dtmc1.is_transient(ISet({v1, v2, v3})) == False
+assert dtmc1.is_transient(frozenset({v1, v2, v3})) == False
 
 # TEST: hitting_probability
-assert dtmc1.hitting_probability(v1, ISet({v2, v3})) == 1
-assert dtmc1.hitting_probability(v1, ISet({v3})) == 1
-assert dtmc2.hitting_probability(v3, ISet({v4})) == 1
-assert dtmc5.hitting_probability(v1, ISet({v2,v3})) == 1
-assert dtmc5.hitting_probability(v1, ISet({v2})) == 0.5
+assert dtmc1.hitting_probability(v1, frozenset({v2, v3})) == 1
+assert dtmc1.hitting_probability(v1, frozenset({v3})) == 1
+assert dtmc2.hitting_probability(v3, frozenset({v4})) == 1
+assert dtmc5.hitting_probability(v1, frozenset({v2,v3})) == 1
+assert dtmc5.hitting_probability(v1, frozenset({v2})) == 0.5
 
 # TEST: expected_hitting_time
-assert dtmc1.expected_hitting_time(v1, ISet({v3})) == 2
-assert dtmc2.expected_hitting_time(v1, ISet({v4})) == 3
+assert dtmc1.expected_hitting_time(v1, frozenset({v3})) == 2
+assert dtmc2.expected_hitting_time(v1, frozenset({v4})) == 3
 
 # TEST: exists_stationary_distribution
 

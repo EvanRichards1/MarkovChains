@@ -1,3 +1,4 @@
 src/__pycache__
 src/main.py
 src/*.png
+.venv

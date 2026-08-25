@@ -1,11 +1,11 @@
-from graph import *
+from graph import Graph, Vertex, Edge
 from random import choices
 from math import gcd, prod
 
 class DTMC(Graph):
     # returns set of edges (i,j, w)
-    def get_transitions(self, i: Vertex) -> ISet[Edge]:
-        return ISet({e for e in self.E if e.v1 == i})
+    def get_transitions(self, i: Vertex) -> frozenset[Edge]:
+        return frozenset({e for e in self.E if e.v1 == i})
 
     # simulate the self
     # returns X_0, ..., X_n
@@ -24,7 +24,7 @@ class DTMC(Graph):
 
     # we want to find every possible path of size n-steps from i
     # returns the set of ALL valid futures {(X_0, ..., X_n), ...}
-    def trace_n_step_futures(self, i: Vertex, n: int, history: tuple[Vertex] = ()) -> ISet[tuple[Vertex]]:
+    def trace_n_step_futures(self, i: Vertex, n: int, history: tuple[Vertex] = ()) -> frozenset[tuple[Vertex]]:
         paths: set[tuple[Vertex]] = set()
 
         history = history + (i,)
@@ -37,7 +37,7 @@ class DTMC(Graph):
             for t in transitions:
                 paths.update(self.trace_n_step_futures(t.v2, n-1, history))
 
-        return ISet(paths)
+        return frozenset(paths)
 
     # 1 to 1 map from vertex pair to edge
     def _get_edge(self, i: Vertex, j: Vertex) -> Edge:
@@ -63,7 +63,7 @@ class DTMC(Graph):
     def trace_period(self, i: Vertex) -> int:
         # known lower bound
         time = 3 * len(self.V)
-        J_i = ISet({n for n in range(1, time) if self.trace_n_step_transition_probability(i, i, n) > 0})
+        J_i = frozenset({n for n in range(1, time) if self.trace_n_step_transition_probability(i, i, n) > 0})
         
         return gcd(*J_i)
 
@@ -72,32 +72,32 @@ class DTMC(Graph):
         return self.trace_period(i) == 1
 
     # maps our self to a set of communicating classes
-    def classify_states(self) -> ISet[Iset[Vertex]]:
-        def communicates(i: Vertex) -> ISet[Vertex]:
-            return ISet({v for p in self.trace_n_step_futures(i, len(self.V)) for v in p})
+    def classify_states(self) -> frozenset[frozenset[Vertex]]:
+        def communicates(i: Vertex) -> frozenset[Vertex]:
+            return frozenset({v for p in self.trace_n_step_futures(i, len(self.V)) for v in p})
 
-        return ISet(
-            ISet({j for j in communicates(i) if i in communicates(j)})
+        return frozenset(
+            frozenset({j for j in communicates(i) if i in communicates(j)})
             for i in self.V
         )
 
     # i.e. 1 communicating class C=S
     def is_irreducible(self) -> bool:
-        return self.classify_states() == ISet({self.V})
+        return self.classify_states() == frozenset({self.V})
 
-    def is_closed(self, C: ISet[Vertex]) -> bool:
+    def is_closed(self, C: frozenset[Vertex]) -> bool:
         return {e for e in self.E if e.v1 in C and e.v2 not in C} == set()
 
-    def hitting_probability(self, i: Vertex, A: ISet[Vertex]) -> float:
+    def hitting_probability(self, i: Vertex, A: frozenset[Vertex]) -> float:
         pass
 
-    def expected_hitting_time(self, i: Vertex, A: ISet[Vertex]) -> float:
+    def expected_hitting_time(self, i: Vertex, A: frozenset[Vertex]) -> float:
         pass
 
-    def is_transient(self, C: ISet[Vertex]) -> bool:
+    def is_transient(self, C: frozenset[Vertex]) -> bool:
         return not self.is_closed(C)
 
-    def is_recurrent(self, C: ISet[Vertex]) -> bool:
+    def is_recurrent(self, C: frozenset[Vertex]) -> bool:
         return not self.is_transient(i)
 
     def is_positive_recurrent(self, i: Vertex) -> bool:
