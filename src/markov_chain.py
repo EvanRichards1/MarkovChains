@@ -7,7 +7,7 @@ class DTMC(Graph):
     def get_transitions(self, i: Vertex) -> frozenset[Edge]:
         return frozenset({e for e in self.E if e.v1 == i})
 
-    # simulate the self
+    # simulate the DTMC
     # returns X_0, ..., X_n
     def run(self, i_0: Vertex, n: int) -> tuple[Vertex]:
         i = i_0
@@ -30,7 +30,8 @@ class DTMC(Graph):
         history = history + (i,)
 
         # base case
-        if n == 0: paths.add(history)
+        if n == 0:
+            paths.add(history)
         # general case
         elif n > 0:
             transitions = self.get_transitions(i)
@@ -42,7 +43,8 @@ class DTMC(Graph):
     # 1 to 1 map from vertex pair to edge
     def _get_edge(self, i: Vertex, j: Vertex) -> Edge:
         for t in self.get_transitions(i):
-            if t.v2 == j: return t
+            if t.v2 == j:
+                return t
 
     # maps vertex paths to a tuple of edges
     def _get_path_edges(self, path: tuple[Vertex]) -> tuple[Edge]:
@@ -50,20 +52,19 @@ class DTMC(Graph):
 
     # p^(n)_i,j
     def trace_n_step_transition_probability(self, i: Vertex, j: Vertex, n: int) -> float:
-        return sum(
-            # product of edge weights in {path edges}
-            (prod((e.weight for e in p)) for p in
-            # {path edges} in a vertex path
-            {self._get_path_edges(p) for p in
-            # subset of {vertex paths} in n steps that end in j
-            {p for p in self.trace_n_step_futures(i, n) if p[-1] == j}})
-        )
+        # Find paths that end in j
+        valid_vertex_paths = {p for p in self.trace_n_step_futures(i, n) if p[-1] == j}
+        valid_paths = {self._get_path_edges(p) for p in valid_vertex_paths}
+        # Sum the product of edge weights
+        probability = sum(prod(e.weight for e in p) for p in valid_paths)
+
+        return probability
 
     # gcd(J_i) i.e. period
     def trace_period(self, i: Vertex) -> int:
         # known lower bound
         time = 3 * len(self.V)
-        J_i = frozenset({n for n in range(1, time) if self.trace_n_step_transition_probability(i, i, n) > 0})
+        J_i = {n for n in range(1, time) if self.trace_n_step_transition_probability(i, i, n) > 0}
         
         return gcd(*J_i)
 
@@ -83,7 +84,7 @@ class DTMC(Graph):
 
     # i.e. 1 communicating class C=S
     def is_irreducible(self) -> bool:
-        return self.classify_states() == frozenset({self.V})
+        return self.classify_states() == {self.V}
 
     def is_closed(self, C: frozenset[Vertex]) -> bool:
         return {e for e in self.E if e.v1 in C and e.v2 not in C} == set()
